@@ -338,9 +338,15 @@ if viz_mode == "Chaos Timeline":
                 "className": f"era-{row['category'].replace(' ', '-').lower()}"
             })
 
-        timeline = st_timeline(timeline_items, groups=[], options={"height": "400px"}, height="400px")
-        if timeline:
-            st.write(f"Selected: {timeline}")
+        try:
+            timeline = st_timeline(timeline_items, groups=[], options={"height": "400px"}, height="400px")
+            if timeline:
+                st.write(f"Selected: {timeline}")
+        except Exception as e:
+            st.error(f"⚠️ Enhanced Timeline restricted in this environment. Falling back to Standard Mode.")
+            st.info("💡 Note: Streamlit Cloud restricts write access required by the timeline component.")
+            # Disable for the rest of this session's render
+            TIMELINE_AVAILABLE = False
 
     # Create main scatter plot
     fig = go.Figure()
